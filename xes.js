@@ -5,7 +5,9 @@ var XES = (function() {
             inheritance.prototype = ptp;
             return new inheritance();
         },
-        privateStatic = {};
+        privateStatic = {}, // хранилище приватных статических областей видимости
+        namespaceProto = {}, // прототип для пространств имён
+        $ = objCreate(namespaceProto); // публичный интерфейс
 
     function isFunction(value) {
         return typeof value === 'function';
@@ -39,7 +41,7 @@ var XES = (function() {
 
         self = objCreate(res);
 
-        self.static = privateStatic[Constructor.$name];
+        self.static = privateStatic[Constructor.$fullName];
         pub = Constructor.$init(self, base);
 
         extend(res, pub);
@@ -47,8 +49,8 @@ var XES = (function() {
         return res;
     }
 
-    function createStatic(name, st) {
-        var self = privateStatic[name] = {},
+    function createStatic(fullName, st) {
+        var self = privateStatic[fullName] = {},
             pub = st(self);
 
         extend(self, pub);
@@ -56,31 +58,80 @@ var XES = (function() {
         return pub;
     }
 
-    return {
-        decl: function(name, body) {
-            var Constructor = XES[name] = function() {
-                var res = create(Constructor);
+    function createNamespace(base, name) {
+        var fullName = base.$fullName + '.' + name;
 
-                if (isFunction(res.constructor)) {
-                    res.constructor.apply(res, arguments);
-                }
+        if (!base || base.$type !== $.TYPES.NAMESPACE) {
+            throw new Error('XES: ' + base.$fullName + ' is not namespace');
+        }
 
-                delete res.constructor;
+        if (hasOwn.call(base, name)) {
+            return base[name];
+        }
 
-                return res;
-            };
+        var namespace = base[name] = objCreate(namespaceProto);
 
-            Constructor.$name = name;
-            Constructor.$extend = body.extend;
-            Constructor.$init = body.init;
+        namespace.$name = name;
+        namespace.$fullName = fullName;
 
-            if (body.static) {
-                extend(Constructor, createStatic(name, body.static));
+        return namespace;
+    }
+
+    function createNamespaceRecursive(base, name) {
+        var names = name.split('.'), i;
+
+        for (i = 0; i < names.length; i++) {
+            base = createNamespace(base, names[i]);
+        }
+
+        return base;
+    }
+
+    $.TYPES = {
+        NAMESPACE: 'Namespace',
+        CLASS: 'Class'
+    };
+
+    namespaceProto.$type = $.TYPES.NAMESPACE;
+
+    namespaceProto.name = function(name) {
+        return createNamespaceRecursive(this, name);
+    };
+
+    namespaceProto.decl = function(name, body) {
+        var fullName = this.$fullName + '.' + name;
+
+        if (hasOwn.call(this, name)) {
+            throw new Error('XES: ' + fullName + ' is exist');
+        }
+
+        var Constructor = this[name] = function() {
+            var res = create(Constructor);
+
+            if (isFunction(res.constructor)) {
+                res.constructor.apply(res, arguments);
             }
 
-            return Constructor;
+            delete res.constructor;
+
+            return res;
+        };
+
+        Constructor.$name = name;
+        Constructor.$fullName = fullName;
+        Constructor.$type = $.TYPES.CLASS;
+
+        Constructor.$extend = body.extend;
+        Constructor.$init = body.init;
+
+        if (body.static) {
+            extend(Constructor, createStatic(fullName, body.static));
         }
+
+        return Constructor;
     };
+
+    return $;
 })();
 
 if (module && module.parent) {

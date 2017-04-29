@@ -3,7 +3,9 @@ var XES = require('./xes');
 
 /* --------------------------------- Декларация ----------------------------- */
 
-XES.decl('HashBase', {
+var Hashes = XES.name('Lib.Hashes');
+
+Hashes.decl('HashBase', {
     init: function(self) {
         self._hash = '';
 
@@ -27,8 +29,8 @@ XES.decl('HashBase', {
     }
 });
 
-XES.decl('Hash', {
-    extend: XES.HashBase,
+XES.Lib.Hashes.decl('Hash', {
+    extend: Hashes.HashBase,
 
     init: function(self, base) {
         return {
@@ -66,7 +68,7 @@ XES.decl('Hash', {
 
 /* --------------------------------- Использование ----------------------------- */
 
-var hash = XES.Hash(),
+var hash = new XES.Lib.Hashes.Hash(),
     getStringHash = hash.toString;
 
 // Попытка изменить приватное поле после инициализации
@@ -76,4 +78,4 @@ hash._hash = '12345';
 console.log(getStringHash());
 
 // Вызов статичной функции
-console.log(XES.Hash.getRandom(1000, 5000));
+console.log(XES.Lib.Hashes.Hash.getRandom(1000, 5000));
