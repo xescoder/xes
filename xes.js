@@ -25,32 +25,34 @@ var XES = (function() {
         }
     }
 
-    function create(Constructor, res) {
-        // Если нативный конструктор
-        if (!isFunction(Constructor.$init)) {
-            return new Constructor();
-        }
-
-        if (!res) {
-            res = {};
-        }
-
+    function create(Constructor, opt) {
         var base, self, pub;
 
+        if (!opt) {
+            opt = { res: {} };
+        }
+
+        // Если нативный конструктор
+        if (!isFunction(Constructor.$init)) {
+            base = new Constructor();
+            opt.res = objCreate(base);
+            return base;
+        }
+
         if (Constructor.$extend) {
-            base = create(Constructor.$extend, res);
+            base = create(Constructor.$extend, opt);
         } else {
             base = {};
         }
 
-        self = objCreate(res);
+        self = objCreate(opt.res);
 
         self.static = privateStatic[Constructor.$fullName];
         pub = Constructor.$init(self, base);
 
-        extend(res, pub);
+        extend(opt.res, pub);
 
-        return res;
+        return opt.res;
     }
 
     function createStatic(fullName, st) {
