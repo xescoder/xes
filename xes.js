@@ -62,6 +62,18 @@ var XES = (function() {
         return pub;
     }
 
+    function isExtend(Child, Parent) {
+        while (Child && Child.$fullName) {
+            if (Child.$fullName === Parent.$fullName) {
+                return true;
+            }
+
+            Child = Child.$extend;
+        }
+
+        return false;
+    }
+
     function createNamespace(base, name) {
         if (!base || base.$type !== $.TYPES.NAMESPACE) {
             throw new Error('XES: ' + base.$fullName + ' is not namespace');
@@ -93,6 +105,24 @@ var XES = (function() {
     $.TYPES = {
         NAMESPACE: 'Namespace',
         CLASS: 'Class'
+    };
+
+    $.$fullName = 'XES';
+
+    $.is = function(obj, Constructor) {
+        if (obj instanceof Constructor) {
+            return true;
+        }
+
+        if (!obj || !obj.constructor || obj.constructor.$type !== $.TYPES.CLASS) {
+            return false;
+        }
+
+        if (!Constructor || Constructor.$type !== $.TYPES.CLASS) {
+            return false;
+        }
+
+        return isExtend(obj.constructor, Constructor);
     };
 
     namespaceProto.$type = $.TYPES.NAMESPACE;

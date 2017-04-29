@@ -74,8 +74,19 @@ var hash = new XES.Lib.Hashes.Hash(),
 // Попытка изменить приватное поле после инициализации
 hash._hash = '12345';
 
-// Вызов функции без контекста
-console.log(getStringHash());
+// Проверка принадлежности базовому классу
+console.log('hash унаследован от XES.Libs.Hashes.HashBase: ' + XES.is(hash, Hashes.HashBase));
 
-// Вызов статичной функции
-console.log(XES.Lib.Hashes.Hash.getRandom(1000, 5000));
+// Вызов функции без контекста
+console.log('Вызов функции без контекста: ' + getStringHash());
+
+// Вызов статической функции
+console.log('Вызов статической функции: ' + XES.Lib.Hashes.Hash.getRandom(1000, 5000));
+
+console.log();
+console.log('Принт HashBase');
+console.log(Hashes.HashBase);
+
+console.log();
+console.log('Принт Hash');
+console.log(Hashes.Hash);
