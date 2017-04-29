@@ -14,6 +14,10 @@ var XES = (function() {
     }
 
     function extend(dest, source) {
+        if (!source || typeof source !== 'object') {
+            return;
+        }
+
         for (var key in source) {
             if (hasOwn.call(source, key)) {
                 dest[key] = source[key];
@@ -59,8 +63,6 @@ var XES = (function() {
     }
 
     function createNamespace(base, name) {
-        var fullName = base.$fullName + '.' + name;
-
         if (!base || base.$type !== $.TYPES.NAMESPACE) {
             throw new Error('XES: ' + base.$fullName + ' is not namespace');
         }
@@ -69,7 +71,8 @@ var XES = (function() {
             return base[name];
         }
 
-        var namespace = base[name] = objCreate(namespaceProto);
+        var namespace = base[name] = objCreate(namespaceProto),
+            fullName = base.$fullName + '.' + name;
 
         namespace.$name = name;
         namespace.$fullName = fullName;
@@ -99,6 +102,10 @@ var XES = (function() {
     };
 
     namespaceProto.decl = function(name, body) {
+        if (!this || this.$type !== $.TYPES.NAMESPACE) {
+            throw new Error('XES: ' + this.$fullName + ' is not namespace');
+        }
+
         var fullName = this.$fullName + '.' + name;
 
         if (hasOwn.call(this, name)) {
@@ -112,7 +119,7 @@ var XES = (function() {
                 res.constructor.apply(res, arguments);
             }
 
-            delete res.constructor;
+            res.constructor = Constructor;
 
             return res;
         };
