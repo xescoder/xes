@@ -158,8 +158,10 @@ var XES = (function() {
         Constructor.$fullName = fullName;
         Constructor.$type = $.TYPES.CLASS;
 
+        body = body || {};
+
         Constructor.$extend = body.extend;
-        Constructor.$init = body.init;
+        Constructor.$init = body.init || (function() {});
 
         if (body.static) {
             extend(Constructor, createStatic(fullName, body.static));
