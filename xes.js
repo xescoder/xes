@@ -9,10 +9,24 @@ var XES = (function() {
         namespaceProto = {}, // прототип для пространств имён
         $ = objCreate(namespaceProto); // публичный интерфейс
 
+    /**
+     * Вовзращает true, если переданное значение является фуркцией
+     *
+     * @private
+     * @param {*} value
+     * @returns {Boolean}
+     */
     function isFunction(value) {
         return typeof value === 'function';
     }
 
+    /**
+     * Расширяет объект dest свойствами объекта source
+     *
+     * @private
+     * @param {Object} dest
+     * @param {*} source
+     */
     function extend(dest, source) {
         if (!source || typeof source !== 'object') {
             return;
@@ -25,6 +39,14 @@ var XES = (function() {
         }
     }
 
+    /**
+     * Создаёт экземпляр класса
+     *
+     * @private
+     * @param {Function} Constructor - конструктор класса
+     * @param {Object} opt - вспомогательный агрумент для передачи общего публичного интерфейса
+     * @returns {Object}
+     */
     function create(Constructor, opt) {
         var base, self, pub;
 
@@ -55,6 +77,12 @@ var XES = (function() {
         return opt.res;
     }
 
+    /**
+     * Создаёт конструктор класса
+     *
+     * @private
+     * @returns {Function}
+     */
     function createConstructor() {
         return function XES_Class() {
             var res = create(XES_Class);
@@ -69,6 +97,14 @@ var XES = (function() {
         };
     }
 
+    /**
+     * Создаёт статическую область видимости класса
+     *
+     * @private
+     * @param {String} fullName - полное имя класса
+     * @param {Object} st - декларация статической области видимости
+     * @returns {Object}
+     */
     function createStatic(fullName, st) {
         var self = privateStatic[fullName] = {},
             pub = st(self);
@@ -78,6 +114,14 @@ var XES = (function() {
         return pub;
     }
 
+    /**
+     * Возвращает true, если класс Child унаследован от класса Parent
+     *
+     * @private
+     * @param {Function} Child
+     * @param {Function} Parent
+     * @returns {Boolean}
+     */
     function isExtend(Child, Parent) {
         while (Child && Child.$fullName) {
             if (Child.$fullName === Parent.$fullName) {
@@ -90,6 +134,14 @@ var XES = (function() {
         return false;
     }
 
+    /**
+     * Создаёт пространство имён
+     *
+     * @private
+     * @param {Object} base - базовое пространство имён
+     * @param {String} name - название пространства имён
+     * @returns {Object}
+     */
     function createNamespace(base, name) {
         if (!base || base.$type !== $.TYPES.NAMESPACE) {
             throw new Error('XES: ' + base.$fullName + ' is not namespace');
@@ -108,6 +160,15 @@ var XES = (function() {
         return namespace;
     }
 
+    /**
+     * Рекурсивно создаёт пространстро имён,
+     * разделяя название по точкам
+     *
+     * @private
+     * @param {Object} base - базовое пространство имён
+     * @param {String} name - название пространства имён
+     * @returns {Object}
+     */
     function createNamespaceRecursive(base, name) {
         var names = name.split('.'), i;
 
@@ -118,13 +179,31 @@ var XES = (function() {
         return base;
     }
 
+    /**
+     * Список типов, реализованных в XES
+     *
+     * @public
+     * @type {{NAMESPACE: string, CLASS: string}}
+     */
     $.TYPES = {
         NAMESPACE: 'Namespace',
         CLASS: 'Class'
     };
 
+    /**
+     * @public
+     * @type {string}
+     */
     $.$fullName = 'XES';
 
+    /**
+     * Возвращает true, если obj унаследован от Constructor
+     *
+     * @public
+     * @param {*} obj
+     * @param {*} Constructor
+     * @returns {Boolean}
+     */
     $.is = function(obj, Constructor) {
         if (obj instanceof Constructor) {
             return true;
@@ -141,12 +220,31 @@ var XES = (function() {
         return isExtend(obj.constructor, Constructor);
     };
 
+    /**
+     * @public
+     * @type {string}
+     */
     namespaceProto.$type = $.TYPES.NAMESPACE;
 
+    /**
+     * Создает новое пространство имён
+     *
+     * @public
+     * @param {String} name - название пространста имён
+     * @returns {Object}
+     */
     namespaceProto.name = function(name) {
         return createNamespaceRecursive(this, name);
     };
 
+    /**
+     * Декларирует новый класс
+     *
+     * @public
+     * @param {String} name - имя класса
+     * @param {Object} body - тело класса
+     * @returns {Function}
+     */
     namespaceProto.decl = function(name, body) {
         if (!this || this.$type !== $.TYPES.NAMESPACE) {
             throw new Error('XES: ' + this.$fullName + ' is not namespace');
