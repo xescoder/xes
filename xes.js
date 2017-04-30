@@ -55,6 +55,20 @@ var XES = (function() {
         return opt.res;
     }
 
+    function createConstructor() {
+        return function XES_Class() {
+            var res = create(XES_Class);
+
+            if (isFunction(res.constructor)) {
+                res.constructor.apply(res, arguments);
+            }
+
+            res.constructor = XES_Class;
+
+            return res;
+        };
+    }
+
     function createStatic(fullName, st) {
         var self = privateStatic[fullName] = {},
             pub = st(self);
@@ -144,17 +158,7 @@ var XES = (function() {
             throw new Error('XES: ' + fullName + ' is exist');
         }
 
-        var Constructor = this[name] = function() {
-            var res = create(Constructor);
-
-            if (isFunction(res.constructor)) {
-                res.constructor.apply(res, arguments);
-            }
-
-            res.constructor = Constructor;
-
-            return res;
-        };
+        var Constructor = this[name] = createConstructor();
 
         Constructor.$name = name;
         Constructor.$fullName = fullName;
