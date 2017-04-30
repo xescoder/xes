@@ -21,9 +21,9 @@ var XES = (function() {
      */
 
     var hasOwn = Object.prototype.hasOwnProperty,
-        objCreate = Object.create || function(ptp) {
+        objCreate = Object.create || function(proto) {
             var inheritance = function () {};
-            inheritance.prototype = ptp;
+            inheritance.prototype = proto;
             return new inheritance();
         },
         privateStatic = {}, // хранилище приватных статических областей видимости
@@ -65,7 +65,7 @@ var XES = (function() {
      *
      * @private
      * @param {XES.Class|Function} Constructor - конструктор класса
-     * @param {Object} opt - вспомогательный агрумент для передачи общего публичного интерфейса
+     * @param {Object} [opt] - вспомогательный агрумент для передачи общего публичного интерфейса
      * @returns {Object}
      */
     function create(Constructor, opt) {
@@ -123,7 +123,7 @@ var XES = (function() {
      *
      * @private
      * @param {String} fullName - полное имя класса
-     * @param {Object} st - декларация статической области видимости
+     * @param {Function} st - декларация статической области видимости
      * @returns {Object}
      */
     function createStatic(fullName, st) {
@@ -159,7 +159,7 @@ var XES = (function() {
      * Создаёт пространство имён
      *
      * @private
-     * @param {XES.Namespace} base - базовое пространство имён
+     * @param {*} base - базовое пространство имён
      * @param {String} name - название пространства имён
      * @returns {XES.Namespace}
      */
@@ -186,7 +186,7 @@ var XES = (function() {
      * разделяя название по точкам
      *
      * @private
-     * @param {XES.Namespace} base - базовое пространство имён
+     * @param {*} base - базовое пространство имён
      * @param {String} name - название пространства имён
      * @returns {XES.Namespace}
      */
