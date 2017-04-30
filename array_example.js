@@ -97,3 +97,4 @@ list.forEach(function(val) {
 
 console.log();
 console.log('Преобразование к числу: ' + +list);
+console.log('Список - это массив: ' + XES.is(list, Array));
