@@ -1,4 +1,25 @@
 var XES = (function() {
+
+    /**
+     * Пространство имён XES
+     * @typedef {Object} XES.Namespace
+     * @property {String} $type - тип объекта (Namespace)
+     * @property {String} $name - название пространства имён
+     * @property {String} $fullName - полное название пространства имён
+     * @property {Function} name - создаёт вложенное пространство имён (XES.Namespace)
+     * @property {Function} decl - декларирует вложенный класс (XES.Class)
+     */
+
+    /**
+     * Класс XES
+     * @typedef {Function} XES.Class
+     * @property {String} $type - тип объекта (Class)
+     * @property {String} $name - название класса
+     * @property {String} $fullName - полное название класса
+     * @property {XES.Class} $extend - базовый класс
+     * @property {Function} $instance - декларация экземпляра класса
+     */
+
     var hasOwn = Object.prototype.hasOwnProperty,
         objCreate = Object.create || function(ptp) {
             var inheritance = function () {};
@@ -43,7 +64,7 @@ var XES = (function() {
      * Создаёт экземпляр класса
      *
      * @private
-     * @param {Function} Constructor - конструктор класса
+     * @param {XES.Class|Function} Constructor - конструктор класса
      * @param {Object} opt - вспомогательный агрумент для передачи общего публичного интерфейса
      * @returns {Object}
      */
@@ -81,7 +102,7 @@ var XES = (function() {
      * Создаёт конструктор класса
      *
      * @private
-     * @returns {Function}
+     * @returns {XES.Class}
      */
     function createConstructor() {
         return function XES_Class() {
@@ -118,8 +139,8 @@ var XES = (function() {
      * Возвращает true, если класс Child унаследован от класса Parent
      *
      * @private
-     * @param {Function} Child
-     * @param {Function} Parent
+     * @param {XES.Class} Child
+     * @param {XES.Class} Parent
      * @returns {Boolean}
      */
     function isExtend(Child, Parent) {
@@ -138,9 +159,9 @@ var XES = (function() {
      * Создаёт пространство имён
      *
      * @private
-     * @param {Object} base - базовое пространство имён
+     * @param {XES.Namespace} base - базовое пространство имён
      * @param {String} name - название пространства имён
-     * @returns {Object}
+     * @returns {XES.Namespace}
      */
     function createNamespace(base, name) {
         if (!base || base.$type !== $.TYPES.NAMESPACE) {
@@ -165,9 +186,9 @@ var XES = (function() {
      * разделяя название по точкам
      *
      * @private
-     * @param {Object} base - базовое пространство имён
+     * @param {XES.Namespace} base - базовое пространство имён
      * @param {String} name - название пространства имён
-     * @returns {Object}
+     * @returns {XES.Namespace}
      */
     function createNamespaceRecursive(base, name) {
         var names = name.split('.'), i;
@@ -231,7 +252,7 @@ var XES = (function() {
      *
      * @public
      * @param {String} name - название пространста имён
-     * @returns {Object}
+     * @returns {XES.Namespace}
      */
     namespaceProto.name = function(name) {
         return createNamespaceRecursive(this, name);
@@ -243,7 +264,7 @@ var XES = (function() {
      * @public
      * @param {String} name - имя класса
      * @param {Object} body - тело класса
-     * @returns {Function}
+     * @returns {XES.Class}
      */
     namespaceProto.decl = function(name, body) {
         if (!this || this.$type !== $.TYPES.NAMESPACE) {
