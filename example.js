@@ -6,7 +6,7 @@ var XES = require('./xes');
 var Hashes = XES.name('Lib.Hashes');
 
 Hashes.decl('HashBase', {
-    init: function(self) {
+    instance: function(self) {
         self._hash = '';
 
         return {
@@ -32,7 +32,7 @@ Hashes.decl('HashBase', {
 XES.Lib.Hashes.decl('Hash', {
     extend: Hashes.HashBase,
 
-    init: function(self, base) {
+    instance: function(self, base) {
         return {
             constructor: function() {
                 self._setHash();

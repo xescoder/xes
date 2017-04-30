@@ -6,7 +6,7 @@ var XES = require('./xes');
 var List = XES.decl('List', {
     extend: Array,
 
-    init: function(self, base) {
+    instance: function(self, base) {
         self.index = 0;
 
         return {

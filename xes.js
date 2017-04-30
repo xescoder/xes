@@ -33,7 +33,7 @@ var XES = (function() {
         }
 
         // Если нативный конструктор
-        if (!isFunction(Constructor.$init)) {
+        if (!isFunction(Constructor.$instance)) {
             base = new Constructor();
             opt.res = objCreate(base);
             return base;
@@ -48,7 +48,7 @@ var XES = (function() {
         self = objCreate(opt.res);
 
         self.static = privateStatic[Constructor.$fullName];
-        pub = Constructor.$init(self, base);
+        pub = Constructor.$instance(self, base);
 
         extend(opt.res, pub);
 
@@ -163,7 +163,7 @@ var XES = (function() {
         body = body || {};
 
         Constructor.$extend = body.extend;
-        Constructor.$init = body.init || (function() {});
+        Constructor.$instance = body.instance || (function() {});
 
         if (body.static) {
             extend(Constructor, createStatic(fullName, body.static));
