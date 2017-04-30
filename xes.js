@@ -16,7 +16,7 @@ var XES = (function() {
      * @property {String} $type - тип объекта (Class)
      * @property {String} $name - название класса
      * @property {String} $fullName - полное название класса
-     * @property {XES.Class} $extend - базовый класс
+     * @property {XES.Class} $extends - базовый класс
      * @property {Function} $instance - декларация экземпляра класса
      */
 
@@ -82,8 +82,8 @@ var XES = (function() {
             return base;
         }
 
-        if (Constructor.$extend) {
-            base = create(Constructor.$extend, opt);
+        if (Constructor.$extends) {
+            base = create(Constructor.$extends, opt);
         } else {
             base = {};
         }
@@ -143,13 +143,13 @@ var XES = (function() {
      * @param {XES.Class} Parent
      * @returns {Boolean}
      */
-    function isExtend(Child, Parent) {
+    function isExtends(Child, Parent) {
         while (Child && Child.$fullName) {
             if (Child.$fullName === Parent.$fullName) {
                 return true;
             }
 
-            Child = Child.$extend;
+            Child = Child.$extends;
         }
 
         return false;
@@ -238,7 +238,7 @@ var XES = (function() {
             return false;
         }
 
-        return isExtend(obj.constructor, Constructor);
+        return isExtends(obj.constructor, Constructor);
     };
 
     /**
@@ -285,7 +285,7 @@ var XES = (function() {
 
         body = body || {};
 
-        Constructor.$extend = body.extend;
+        Constructor.$extends = body.extends;
         Constructor.$instance = body.instance || (function() {});
 
         if (body.static) {

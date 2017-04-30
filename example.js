@@ -30,7 +30,7 @@ Hashes.decl('HashBase', {
 });
 
 XES.Lib.Hashes.decl('Hash', {
-    extend: Hashes.HashBase,
+    extends: Hashes.HashBase,
 
     instance: function(self, base) {
         return {
