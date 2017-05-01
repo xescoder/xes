@@ -122,12 +122,14 @@ var XES = (function() {
      * Создаёт статическую область видимости класса
      *
      * @private
-     * @param {String} fullName - полное имя класса
+     * @param {XES.Class} Constructor - конструктор класса
      * @param {Function} st - декларация статической области видимости
      * @returns {Object}
      */
-    function createStatic(fullName, st) {
-        var self = privateStatic[fullName] = {},
+    function createStatic(Constructor, st) {
+        var self = privateStatic[Constructor.$fullName] = function() {
+                return Constructor.apply(this, arguments);
+            },
             pub = st(self);
 
         extend(self, pub);
@@ -289,7 +291,7 @@ var XES = (function() {
         Constructor.$instance = body.instance || (function() {});
 
         if (body.static) {
-            extend(Constructor, createStatic(fullName, body.static));
+            extend(Constructor, createStatic(Constructor, body.static));
         }
 
         return Constructor;

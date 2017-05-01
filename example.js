@@ -56,8 +56,12 @@ XES.Lib.Hashes.decl('Hash', {
         };
     },
 
-    static: function() {
+    static: function(self) {
         return {
+            getInstance: function() {
+                return self();
+            },
+
             getRandom: function(min, max) {
                 return (Math.random() * (max - min) + min);
             }
@@ -68,7 +72,7 @@ XES.Lib.Hashes.decl('Hash', {
 
 /* --------------------------------- Использование ----------------------------- */
 
-var hash = new XES.Lib.Hashes.Hash(),
+var hash = XES.Lib.Hashes.Hash.getInstance(),
     getStringHash = hash.toString;
 
 // Попытка изменить приватное поле после инициализации
