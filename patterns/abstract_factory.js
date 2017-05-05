@@ -142,8 +142,8 @@ XES.decl('Factory', {
                 }
             },
 
-            getButton: function() {
-                return self._factory.getButton();
+            getButton: function(text) {
+                return self._factory.getButton().text(text);
             },
 
             getSearch: function() {
@@ -158,5 +158,5 @@ XES.decl('Factory', {
 
 var factory = new XES.Factory('html5');
 
-console.log(factory.getButton().text('click me').render());
+console.log(factory.getButton('click me').render());
 console.log(factory.getSearch().render());
