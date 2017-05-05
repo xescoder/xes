@@ -42,6 +42,16 @@ var XES = (function() {
     }
 
     /**
+     * Возвращает случайную строку символов
+     *
+     * @private
+     * @returns {String}
+     */
+    function randomString() {
+        return '$' + ((Math.random() + 1) * 5e22).toString(36);
+    }
+
+    /**
      * Расширяет объект dest свойствами объекта source
      *
      * @private
@@ -58,6 +68,24 @@ var XES = (function() {
                 dest[key] = source[key];
             }
         }
+    }
+
+    /**
+     * Находит непереопределённый абстракный метод
+     * в инстансе класса
+     *
+     * @private
+     * @param {Object} instance
+     * @returns {String|Undefined}
+     */
+    function findAbstractMethod(instance) {
+        for (var key in instance) {
+            if (hasOwn.call(instance, key) && (instance[key] === $.Abstract)) {
+                return key;
+            }
+        }
+
+        return undefined;
     }
 
     /**
@@ -106,7 +134,12 @@ var XES = (function() {
      */
     function createConstructor() {
         return function XES_Class() {
-            var res = create(XES_Class);
+            var res = create(XES_Class),
+                abstract = findAbstractMethod(res);
+
+            if (abstract) {
+                throw new Error('XES: abstract method "' + abstract + '" is not override');
+            }
 
             if (isFunction(res.constructor)) {
                 res.constructor.apply(res, arguments);
@@ -212,6 +245,14 @@ var XES = (function() {
         NAMESPACE: 'Namespace',
         CLASS: 'Class'
     };
+
+    /**
+     * Идентификатор абстракного метода
+     *
+     * @public
+     * @type {String}
+     */
+    $.Abstract = randomString();
 
     /**
      * @public

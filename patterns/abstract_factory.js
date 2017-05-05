@@ -1,22 +1,20 @@
-var XES = require('../xes');
+'use strict';
+
+const XES = require('../xes');
 
 
 /* ------------------------------- Base classes ----------------------------------- */
 
 XES.decl('Control', {
-    instance: function() {
-        return {
-            render: function() {
-                throw new Error('abstract method');
-            }
-        }
-    }
+    instance: () => ({
+        render: XES.Abstract
+    })
 });
 
 XES.decl('Button', {
     extends: XES.Control,
 
-    instance: function(self) {
+    instance: (self) => {
         self._text = '';
 
         return {
@@ -33,6 +31,13 @@ XES.decl('Button', {
     }
 });
 
+XES.decl('AbstractFactory', {
+    instance: () => ({
+        getButton: XES.Abstract,
+        getSearch: XES.Abstract
+    })
+});
+
 
 /* ------------------------------- HTML4 classes ----------------------------------- */
 
@@ -41,39 +46,26 @@ XES.name('HTML4');
 XES.HTML4.decl('Button', {
     extends: XES.Button,
 
-    instance: function(self, base) {
-        return {
-            render: function() {
-                return '<input type="submit" value="' + base.text() + '">';
-            }
-        }
-    }
+    instance: (self, base) => ({
+        render: () => '<input type="submit" value="' + base.text() + '">'
+    })
 });
 
 XES.HTML4.decl('Search', {
-    extend: XES.Control,
+    extends: XES.Control,
 
-    instance: function() {
-        return {
-            render: function() {
-                return '<input type="text" name="q">';
-            }
-        }
-    }
+    instance: () => ({
+        render: () => '<input type="text" name="q">'
+    })
 });
 
 XES.HTML4.decl('Factory', {
-    instance: function() {
-        return {
-            getButton: function() {
-                return new XES.HTML4.Button();
-            },
+    extends: XES.AbstractFactory,
 
-            getSearch: function() {
-                return new XES.HTML4.Search();
-            }
-        };
-    }
+    instance: () => ({
+        getButton: () => new XES.HTML4.Button(),
+        getSearch: () => new XES.HTML4.Search()
+    })
 });
 
 
@@ -84,50 +76,39 @@ XES.name('HTML5');
 XES.HTML5.decl('Button', {
     extends: XES.Button,
 
-    instance: function(self, base) {
-        return {
-            render: function() {
-                return '<button>' + base.text() + '</button>';
-            }
-        }
-    }
+    instance: (self, base) => ({
+        render: () => '<button>' + base.text() + '</button>'
+    })
 });
 
 XES.HTML5.decl('Search', {
-    extend: XES.Control,
+    extends: XES.Control,
 
-    instance: function() {
-        return {
-            render: function() {
-                return '<input type="search" name="q">';
-            }
-        }
-    }
+    instance: () => ({
+        render: () => '<input type="search" name="q">'
+    })
 });
 
 XES.HTML5.decl('Factory', {
-    instance: function() {
-        return {
-            getButton: function() {
-                return new XES.HTML5.Button();
-            },
+    extends: XES.AbstractFactory,
 
-            getSearch: function() {
-                return new XES.HTML5.Search();
-            }
-        };
-    }
+    instance: () => ({
+        getButton: () => new XES.HTML5.Button(),
+        getSearch: () => new XES.HTML5.Search()
+    })
 });
 
 
 /* ------------------------------- Factory ----------------------------------- */
 
 XES.decl('Factory', {
-    instance: function(self) {
+    extends: XES.AbstractFactory,
+
+    instance: (self) => {
         self._factory = null;
 
         return {
-            constructor: function (htmlType) {
+            constructor: (htmlType) => {
                 switch(htmlType) {
                     case 'html4':
                         self._factory = new XES.HTML4.Factory();
@@ -142,13 +123,8 @@ XES.decl('Factory', {
                 }
             },
 
-            getButton: function(text) {
-                return self._factory.getButton().text(text);
-            },
-
-            getSearch: function() {
-                return self._factory.getSearch();
-            }
+            getButton: (text) => self._factory.getButton().text(text),
+            getSearch: () => self._factory.getSearch()
         }
     }
 });
@@ -156,7 +132,7 @@ XES.decl('Factory', {
 
 /* ------------------------------- Using ----------------------------------- */
 
-var factory = new XES.Factory('html5');
+const factory = new XES.Factory('html5');
 
 console.log(factory.getButton('click me').render());
 console.log(factory.getSearch().render());
