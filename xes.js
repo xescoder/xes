@@ -24,6 +24,16 @@ var XES = (function() {
      * @property {Function} $instance - декларация экземпляра класса
      */
 
+    /**
+     * Класс ошибок XES
+     *
+     * @class
+     * @typedef {Function} XES.Error
+     * @property {String} name
+     * @property {String} message
+     * @property {String} stack
+     */
+
     var hasOwn = Object.prototype.hasOwnProperty,
         objCreate = Object.create || function(proto) {
             var inheritance = function () {};
@@ -142,7 +152,7 @@ var XES = (function() {
                 abstract = findAbstractMethod(res);
 
             if (abstract) {
-                throw new Error('XES: abstract method "' + abstract + '" is not override');
+                throw new $.Error('Abstract method "' + abstract + '" is not override', XES_Class);
             }
 
             if (isFunction(res.constructor)) {
@@ -204,7 +214,7 @@ var XES = (function() {
      */
     function createNamespace(base, name) {
         if (!base || base.$type !== $.TYPES.NAMESPACE) {
-            throw new Error('XES: ' + base.$fullName + ' is not namespace');
+            throw new $.Error(base.$fullName + ' is not namespace', namespaceProto.name);
         }
 
         if (hasOwn.call(base, name)) {
@@ -293,6 +303,29 @@ var XES = (function() {
     };
 
     /**
+     * Класс ошибок XES
+     *
+     * @public
+     * @type {XES.Error}
+     * @param {String} message - текст ошибки
+     * @param {Function} func - функция, до которой собирается стек ошибок
+     * @constructor
+     * @memberOf XES
+     */
+    $.Error = function XES_Error(message, func) {
+        this.name = 'XES.Error';
+        this.message = message || '';
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, func);
+        } else {
+            this.stack = (new Error()).stack;
+        }
+    };
+
+    $.Error.prototype = Error.prototype;
+
+    /**
      * @public
      * @memberOf XES
      * @type {string}
@@ -322,13 +355,13 @@ var XES = (function() {
      */
     namespaceProto.decl = function(name, body) {
         if (!this || this.$type !== $.TYPES.NAMESPACE) {
-            throw new Error('XES: ' + this.$fullName + ' is not namespace');
+            throw new $.Error(this.$fullName + ' is not namespace', namespaceProto.decl);
         }
 
         var fullName = this.$fullName + '.' + name;
 
         if (hasOwn.call(this, name)) {
-            throw new Error('XES: ' + fullName + ' is exist');
+            throw new $.Error(fullName + ' is exist', namespaceProto.decl);
         }
 
         var Constructor = this[name] = createConstructor();
