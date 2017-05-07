@@ -198,9 +198,12 @@
         var self = privateStatic[Constructor.$fullName] = function() {
                 return Constructor.apply(this, arguments);
             },
-            pub = st(self);
+            pub = {};
 
-        extend(self, pub);
+        if (isFunction(st)) {
+            pub = st(self);
+            extend(self, pub);
+        }
 
         return pub;
     }
@@ -427,9 +430,7 @@
         Constructor.$extends = body.extends;
         Constructor.$instance = body.instance || (function() {});
 
-        if (body.static) {
-            extend(Constructor, createStatic(Constructor, body.static));
-        }
+        extend(Constructor, createStatic(Constructor, body.static));
 
         return Constructor;
     };
