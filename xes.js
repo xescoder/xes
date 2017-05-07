@@ -1,4 +1,4 @@
-var XES = (function() {
+(function(global, undefined) {
 
     /**
      * Пространство имён XES
@@ -36,16 +36,17 @@ var XES = (function() {
 
     var hasOwn = Object.prototype.hasOwnProperty,
         objCreate = Object.create || function(proto) {
-            var inheritance = function () {};
-            inheritance.prototype = proto;
-            return new inheritance();
-        },
+                var inheritance = function () {};
+                inheritance.prototype = proto;
+                return new inheritance();
+            },
+
         privateStatic = {}, // хранилище приватных статических областей видимости
         namespaceProto = {}, // прототип для пространств имён
         $ = objCreate(namespaceProto); // публичный интерфейс
 
     /**
-     * Вовзращает true, если переданное значение является фуркцией
+     * Вовзращает true, если переданное значение является функцией
      *
      * @private
      * @param {*} value
@@ -53,6 +54,17 @@ var XES = (function() {
      */
     function isFunction(value) {
         return typeof value === 'function';
+    }
+
+    /**
+     * Возвращает true, если переданное значение является объектом
+     *
+     * @private
+     * @param {*} value
+     * @returns {Boolean}
+     */
+    function isObject(value) {
+        return Boolean(value) && typeof value === 'object';
     }
 
     /**
@@ -73,7 +85,7 @@ var XES = (function() {
      * @param {*} source
      */
     function extend(dest, source) {
-        if (!source || typeof source !== 'object') {
+        if (!isObject(source)) {
             return;
         }
 
@@ -250,6 +262,37 @@ var XES = (function() {
     }
 
     /**
+     * Публикует библиотеку
+     *
+     * @private
+     * @param {Object} XES
+     */
+    function publish(XES) {
+        if (isObject(exports)) {
+            module.exports = XES;
+            return;
+        }
+
+        if (isObject(modules) && isFunction(modules.define)) {
+            modules.define('XES', function(provide) {
+                provide(XES);
+            });
+
+            return;
+        }
+
+        if (isFunction(define)) {
+            define(function(require, exports, module) {
+                module.exports = XES;
+            });
+
+            return;
+        }
+
+        global.XES = XES;
+    }
+
+    /**
      * Список типов, реализованных в XES
      *
      * @public
@@ -382,9 +425,6 @@ var XES = (function() {
         return Constructor;
     };
 
-    return $;
-})();
-
-if (module && module.parent) {
-    module.exports = XES;
-}
+    // Публикуем библиотеку
+    publish($);
+})(this);
