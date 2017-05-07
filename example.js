@@ -43,7 +43,7 @@ XES.Lib.Hashes.decl('Hash', {
                     n = self.static.getRandom(24, 36),
                     maxLen = 32;
 
-                return base._substr(value.toString(n), 0, maxLen);
+                return self._substr(value.toString(n), 0, maxLen);
             },
 
             _substr: function(str, start, length) {

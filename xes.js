@@ -126,30 +126,39 @@
         var base, self, pub;
 
         if (!opt) {
-            opt = { res: {} };
+            opt = {
+                base: {},
+                res: {}
+            };
+        }
+
+        if (!Constructor) {
+            return opt;
         }
 
         // Если нативный конструктор
         if (!isFunction(Constructor.$instance)) {
-            base = new Constructor();
-            opt.res = objCreate(base);
-            return base;
+            opt.base = new Constructor();
+            opt.res = objCreate(opt.base);
+            return opt;
         }
 
         if (Constructor.$extends) {
-            base = create(Constructor.$extends, opt);
-        } else {
-            base = {};
+            opt = create(Constructor.$extends, opt);
         }
 
         self = objCreate(opt.res);
+
+        base = opt.base;
+        opt.base = objCreate(opt.base);
 
         self.static = privateStatic[Constructor.$fullName];
         pub = Constructor.$instance(self, base);
 
         extend(opt.res, pub);
+        extend(opt.base, pub);
 
-        return opt.res;
+        return opt;
     }
 
     /**
@@ -160,7 +169,7 @@
      */
     function createConstructor() {
         return function XES_Class() {
-            var res = create(XES_Class),
+            var res = create(XES_Class).res,
                 abstract = findAbstractMethod(res);
 
             if (abstract) {
