@@ -5,12 +5,22 @@ const XES = require('../xes');
 
 /* ------------------------------- Base classes ----------------------------------- */
 
+/**
+ * @name Control
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('Control', {
     instance: () => ({
         render: XES.Abstract
     })
 });
 
+/**
+ * @name Button
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('Button', {
     extends: XES.Control,
 
@@ -31,6 +41,11 @@ XES.decl('Button', {
     }
 });
 
+/**
+ * @name AbstractFactory
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('AbstractFactory', {
     instance: () => ({
         getButton: XES.Abstract,
@@ -41,8 +56,18 @@ XES.decl('AbstractFactory', {
 
 /* ------------------------------- HTML4 classes ----------------------------------- */
 
+/**
+ * @name HTML4
+ * @type {XES.Namespace}
+ * @memberOf XES
+ */
 XES.name('HTML4');
 
+/**
+ * @name Button
+ * @type {XES.Class}
+ * @memberOf XES.HTML4
+ */
 XES.HTML4.decl('Button', {
     extends: XES.Button,
 
@@ -51,6 +76,11 @@ XES.HTML4.decl('Button', {
     })
 });
 
+/**
+ * @name Search
+ * @type {XES.Class}
+ * @memberOf XES.HTML4
+ */
 XES.HTML4.decl('Search', {
     extends: XES.Control,
 
@@ -59,6 +89,11 @@ XES.HTML4.decl('Search', {
     })
 });
 
+/**
+ * @name Factory
+ * @type {XES.Class}
+ * @memberOf XES.HTML4
+ */
 XES.HTML4.decl('Factory', {
     extends: XES.AbstractFactory,
 
@@ -71,8 +106,18 @@ XES.HTML4.decl('Factory', {
 
 /* ------------------------------- HTML4 classes ----------------------------------- */
 
+/**
+ * @name HTML5
+ * @type {XES.Namespace}
+ * @memberOf XES
+ */
 XES.name('HTML5');
 
+/**
+ * @name Button
+ * @type {XES.Class}
+ * @memberOf XES.HTML5
+ */
 XES.HTML5.decl('Button', {
     extends: XES.Button,
 
@@ -81,6 +126,11 @@ XES.HTML5.decl('Button', {
     })
 });
 
+/**
+ * @name Search
+ * @type {XES.Class}
+ * @memberOf XES.HTML5
+ */
 XES.HTML5.decl('Search', {
     extends: XES.Control,
 
@@ -89,6 +139,11 @@ XES.HTML5.decl('Search', {
     })
 });
 
+/**
+ * @name Factory
+ * @type {XES.Class}
+ * @memberOf XES.HTML5
+ */
 XES.HTML5.decl('Factory', {
     extends: XES.AbstractFactory,
 
@@ -101,6 +156,11 @@ XES.HTML5.decl('Factory', {
 
 /* ------------------------------- Factory ----------------------------------- */
 
+/**
+ * @name Factory
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('Factory', {
     extends: XES.AbstractFactory,
 

@@ -5,6 +5,11 @@ const XES = require('../xes');
 
 /* ------------------------------- Base classes ----------------------------------- */
 
+/**
+ * @name Builder
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('Builder', {
     instance: () => ({
         addTitle: XES.Abstract,
@@ -16,6 +21,11 @@ XES.decl('Builder', {
 
 /* ---------------------------------- Builders ----------------------------------- */
 
+/**
+ * @name HTMLBuilder
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('HTMLBuilder', {
     extends: XES.Builder,
 
@@ -36,6 +46,11 @@ XES.decl('HTMLBuilder', {
     }
 });
 
+/**
+ * @name MarkdownBuilder
+ * @type {XES.Class}
+ * @memberOf XES
+ */
 XES.decl('MarkdownBuilder', {
     extends: XES.Builder,
 
