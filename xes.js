@@ -2,6 +2,8 @@ var XES = (function() {
 
     /**
      * Пространство имён XES
+     *
+     * @namespace
      * @typedef {Object} XES.Namespace
      * @property {String} $type - тип объекта (Namespace)
      * @property {String} $name - название пространства имён
@@ -12,6 +14,8 @@ var XES = (function() {
 
     /**
      * Класс XES
+     *
+     * @class
      * @typedef {Function} XES.Class
      * @property {String} $type - тип объекта (Class)
      * @property {String} $name - название класса
@@ -194,7 +198,7 @@ var XES = (function() {
      * Создаёт пространство имён
      *
      * @private
-     * @param {*} base - базовое пространство имён
+     * @param {XES.Namespace} base - базовое пространство имён
      * @param {String} name - название пространства имён
      * @returns {XES.Namespace}
      */
@@ -221,7 +225,7 @@ var XES = (function() {
      * разделяя название по точкам
      *
      * @private
-     * @param {*} base - базовое пространство имён
+     * @param {XES.Namespace} base - базовое пространство имён
      * @param {String} name - название пространства имён
      * @returns {XES.Namespace}
      */
@@ -240,6 +244,7 @@ var XES = (function() {
      *
      * @public
      * @type {{NAMESPACE: string, CLASS: string}}
+     * @memberOf XES
      */
     $.TYPES = {
         NAMESPACE: 'Namespace',
@@ -251,12 +256,14 @@ var XES = (function() {
      *
      * @public
      * @type {String}
+     * @memberOf XES
      */
     $.Abstract = randomString();
 
     /**
      * @public
      * @type {string}
+     * @memberOf XES
      */
     $.$fullName = 'XES';
 
@@ -264,6 +271,7 @@ var XES = (function() {
      * Возвращает true, если obj унаследован от Constructor
      *
      * @public
+     * @memberOf XES
      * @param {*} obj
      * @param {*} Constructor
      * @returns {Boolean}
@@ -286,6 +294,7 @@ var XES = (function() {
 
     /**
      * @public
+     * @memberOf XES
      * @type {string}
      */
     namespaceProto.$type = $.TYPES.NAMESPACE;
@@ -294,6 +303,7 @@ var XES = (function() {
      * Создает новое пространство имён
      *
      * @public
+     * @memberOf XES
      * @param {String} name - название пространста имён
      * @returns {XES.Namespace}
      */
@@ -305,6 +315,7 @@ var XES = (function() {
      * Декларирует новый класс
      *
      * @public
+     * @memberOf XES
      * @param {String} name - имя класса
      * @param {Object} body - тело класса
      * @returns {XES.Class}
