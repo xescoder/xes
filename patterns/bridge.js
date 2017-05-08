@@ -170,3 +170,14 @@ const iterator = new XES.Iterators.DESC(list);
 iterator.forEach((item) => {
     console.log(item);
 });
+
+
+/* ------------------------------ Testing ---------------------------------- */
+
+let reference = 'ytrewq',
+    i = 0;
+
+iterator.forEach((item) => {
+    console.assert(item === reference[i], 'Incorrect current item');
+    i++;
+});

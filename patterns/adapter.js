@@ -44,9 +44,21 @@ XES.decl('List', {
 
 /* ------------------------------- Using ----------------------------------- */
 
-const list = new XES.List(['q', 'w', 'e', 'r', 't', 'y']);
+let list = new XES.List(['q', 'w', 'e', 'r', 't', 'y']);
 
 while (list.next()) {
     console.log(list.current());
 }
 
+
+/* ------------------------------ Testing ---------------------------------- */
+
+list = new XES.List([0, 1, 2, 3, 4, 5, 6, 7]);
+
+let reference = [0, 1, 2, 3, 4, 5, 6, 7],
+    i = 0, current;
+
+while (list.next()) {
+    console.assert(list.current() === reference[i], 'Incorrect current item');
+    i++;
+}

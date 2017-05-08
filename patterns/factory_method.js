@@ -71,19 +71,54 @@ XES.decl('RandomArray', {
 console.log('Random string');
 console.log('-----------------------------');
 
-const rString = new XES.RandomString();
+let rString = new XES.RandomString();
 
 console.log('First item: ', rString.first());
 console.log('Last item: ', rString.last());
 console.log('Length: ', rString.length());
 
-
 console.log();
 console.log('Random array');
 console.log('-----------------------------');
 
-const rArray = new XES.RandomArray();
+let rArray = new XES.RandomArray();
 
 console.log('First item: ', rArray.first());
 console.log('Last item: ', rArray.last());
 console.log('Length: ', rArray.length());
+
+
+/* ------------------------------ Testing ---------------------------------- */
+
+// XES.RandomString stub
+((original) => {
+    XES.RandomString.$instance = function stub() {
+        const inst = original.apply(this, arguments);
+
+        inst.create = () => 'qwerty';
+
+        return inst;
+    };
+})(XES.RandomString.$instance);
+
+// XES.RandomArray stub
+((original) => {
+    XES.RandomArray.$instance = function stub() {
+        const inst = original.apply(this, arguments);
+
+        inst.create = () => [0, 1, 2, 3, 4, 5, 6];
+
+        return inst;
+    };
+})(XES.RandomArray.$instance);
+
+rString = new XES.RandomString();
+rArray = new XES.RandomArray();
+
+console.assert(rString.first() === 'q', 'Incorrect first in RandomString');
+console.assert(rString.last() === 'y', 'Incorrect last in RandomString');
+console.assert(rString.length() === 6, 'Incorrect length for RandomString');
+
+console.assert(rArray.first() === 0, 'Incorrect first in RandomArray');
+console.assert(rArray.last() === 6, 'Incorrect last in RandomArray');
+console.assert(rArray.length() === 7, 'Incorrect length for RandomArray');

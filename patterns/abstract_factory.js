@@ -192,7 +192,18 @@ XES.decl('Factory', {
 
 /* ------------------------------- Using ----------------------------------- */
 
-const factory = new XES.Factory('html5');
+let factory = new XES.Factory('html5');
 
 console.log(factory.getButton('click me').render());
 console.log(factory.getSearch().render());
+
+
+/* ------------------------------ Testing ---------------------------------- */
+
+factory = new XES.Factory('html4');
+
+const buttonHtml = factory.getButton('click me').render();
+const searchHtml = factory.getSearch().render();
+
+console.assert(buttonHtml === '<input type="submit" value="click me">', 'Error: not equal ' + buttonHtml);
+console.assert(searchHtml === '<input type="text" name="q">', 'Error: not equal' + searchHtml);

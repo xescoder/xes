@@ -91,3 +91,13 @@ builder.addTitle('Test title');
 builder.addContent('Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.');
 
 console.log(String(builder));
+
+
+/* ------------------------------ Testing ---------------------------------- */
+
+let reference = '';
+
+reference += '<h1>Test title</h1>\n';
+reference += '<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>\n';
+
+console.assert(String(builder) === reference, 'Incorrect build result');

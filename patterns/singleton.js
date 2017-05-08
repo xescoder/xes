@@ -39,3 +39,8 @@ console.log(XES.Counter.getInstance() + '');
 console.log(XES.Counter.getInstance() + '');
 console.log(XES.Counter.getInstance() + '');
 console.log(XES.Counter.getInstance() + '');
+
+
+/* ------------------------------ Testing ---------------------------------- */
+
+console.assert(+XES.Counter.getInstance() === 6, 'Incorrect next value');
