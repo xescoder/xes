@@ -20,6 +20,7 @@
      * @property {String} $type - тип объекта (Class)
      * @property {String} $name - название класса
      * @property {String} $fullName - полное название класса
+     * @Property {String} $classId - уникальный идентификатор класса
      * @property {XES.Class} $extends - базовый класс
      * @property {Function} $instance - декларация экземпляра класса
      */
@@ -158,7 +159,7 @@
         base = opt.base;
         opt.base = objCreate(opt.base);
 
-        self.static = privateStatic[Constructor.$fullName];
+        self.static = privateStatic[Constructor.$classId];
         pub = Constructor.$instance(self, base);
 
         extend(opt.res, pub);
@@ -201,7 +202,7 @@
      * @returns {Object}
      */
     function createStatic(Constructor, st) {
-        var self = privateStatic[Constructor.$fullName] = function() {
+        var self = privateStatic[Constructor.$classId] = function() {
                 return Constructor.apply(this, arguments);
             },
             pub = {};
@@ -223,8 +224,8 @@
      * @returns {Boolean}
      */
     function isExtends(Child, Parent) {
-        while (Child && Child.$fullName) {
-            if (Child.$fullName === Parent.$fullName) {
+        while (Child && Child.$classId) {
+            if (Child.$classId === Parent.$classId) {
                 return true;
             }
 
@@ -430,6 +431,7 @@
         Constructor.$name = name;
         Constructor.$fullName = fullName;
         Constructor.$type = $.TYPES.CLASS;
+        Constructor.$classId = randomString();
 
         body = body || {};
 
