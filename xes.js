@@ -74,7 +74,13 @@
      * @returns {String}
      */
     function randomString() {
-        return '$' + ((Math.random() + 1) * 5e22).toString(36);
+        var res = '', i;
+
+        for (i = 0; i < 4; i++) {
+            res += (((Math.random() + 1) * 5e7)^0).toString(36);
+        }
+
+        return res;
     }
 
     /**
