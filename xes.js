@@ -1,4 +1,4 @@
-(function(global, undefined) {
+(function(global, undef) {
 
     /**
      * Пространство имён XES
@@ -118,7 +118,7 @@
             }
         }
 
-        return undefined;
+        return undef;
     }
 
     /**
@@ -416,20 +416,31 @@
      * @returns {XES.Class}
      */
     namespaceProto.decl = function(name, body) {
-        if (!this || this.$type !== $.TYPES.NAMESPACE) {
-            throw new $.Error(this.$fullName + ' is not namespace', namespaceProto.decl);
+        var Constructor = createConstructor(),
+            fullName;
+
+        if (!body) {
+            body = name;
+            name = undef;
         }
 
-        var fullName = this.$fullName + '.' + name;
+        if (name) {
+            if (!this || this.$type !== $.TYPES.NAMESPACE) {
+                throw new $.Error(this.$fullName + ' is not namespace', namespaceProto.decl);
+            }
 
-        if (hasOwn.call(this, name)) {
-            throw new $.Error(fullName + ' is exist', namespaceProto.decl);
+            fullName = this.$fullName + '.' + name;
+
+            if (hasOwn.call(this, name)) {
+                throw new $.Error(fullName + ' is exist', namespaceProto.decl);
+            }
+
+            Constructor.$name = name;
+            Constructor.$fullName = fullName;
+
+            this[name] = Constructor;
         }
 
-        var Constructor = this[name] = createConstructor();
-
-        Constructor.$name = name;
-        Constructor.$fullName = fullName;
         Constructor.$type = $.TYPES.CLASS;
         Constructor.$classId = randomString();
 
