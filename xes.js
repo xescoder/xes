@@ -211,26 +211,6 @@
     }
 
     /**
-     * Возвращает true, если класс Child унаследован от класса Parent
-     *
-     * @private
-     * @param {XES.Class} Child
-     * @param {XES.Class} Parent
-     * @returns {Boolean}
-     */
-    function isExtends(Child, Parent) {
-        while (Child && Child.$classId) {
-            if (Child.$classId === Parent.$classId) {
-                return true;
-            }
-
-            Child = Child.$extends;
-        }
-
-        return false;
-    }
-
-    /**
      * Создаёт пространство имён
      *
      * @private
@@ -333,31 +313,6 @@
      * @memberOf XES
      */
     $.$fullName = 'XES';
-
-    /**
-     * Возвращает true, если obj унаследован от Constructor
-     *
-     * @public
-     * @memberOf XES
-     * @param {*} obj
-     * @param {*} Constructor
-     * @returns {Boolean}
-     */
-    $.is = function(obj, Constructor) {
-        if (obj instanceof Constructor) {
-            return true;
-        }
-
-        if (!obj || !obj.constructor || obj.constructor.$type !== $.TYPES.CLASS) {
-            return false;
-        }
-
-        if (!Constructor || Constructor.$type !== $.TYPES.CLASS) {
-            return false;
-        }
-
-        return isExtends(obj.constructor, Constructor);
-    };
 
     /**
      * Класс ошибок XES

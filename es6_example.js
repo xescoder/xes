@@ -92,4 +92,4 @@ list.forEach(function(val) {
 });
 
 console.log();
-console.log('Список - это массив: ' + XES.is(list, Array));
+console.log('Список - это массив: ' + (list instanceof Array));
