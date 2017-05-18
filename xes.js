@@ -133,20 +133,15 @@
         var base, self, pub;
 
         if (!opt) {
-            opt = {
-                base: {},
-                res: {}
-            };
-        }
+            opt = {};
 
-        if (!Constructor) {
-            return opt;
-        }
-
-        // Если нативный конструктор
-        if (!isFunction(Constructor.$instance)) {
-            opt.base = new Constructor();
+            // Нативные методы прототипа считаем
+            // базовыми методами создаваемого инстанса
+            opt.base = objCreate(Constructor.prototype);
             opt.res = objCreate(opt.base);
+        }
+
+        if (!Constructor || !isFunction(Constructor.$instance)) {
             return opt;
         }
 
@@ -446,10 +441,11 @@
 
         body = body || {};
 
-        Constructor.$extends = body.extends;
-        Constructor.$instance = body.instance || (function() {});
-
         extend(Constructor, createStatic(Constructor, body.static));
+
+        Constructor.$instance = isFunction(body.instance) ? body.instance : (function() {});
+        Constructor.$extends = isFunction(body.extends) ? body.extends : Object;
+        Constructor.prototype = objCreate(Constructor.$extends.prototype);
 
         return Constructor;
     };

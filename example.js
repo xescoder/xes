@@ -79,7 +79,7 @@ var hash = XES.Lib.Hashes.Hash.getInstance(),
 hash._hash = '12345';
 
 // Проверка принадлежности базовому классу
-console.log('hash унаследован от XES.Libs.Hashes.HashBase: ' + XES.is(hash, Hashes.HashBase));
+console.log('hash унаследован от XES.Libs.Hashes.HashBase: ' + (hash instanceof Hashes.HashBase));
 
 // Вызов функции без контекста
 console.log('Вызов функции без контекста: ' + getStringHash());
