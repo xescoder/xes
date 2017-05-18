@@ -20,7 +20,7 @@
      * @property {String} $type - тип объекта (Class)
      * @property {String} $name - название класса
      * @property {String} $fullName - полное название класса
-     * @Property {String} $classId - уникальный идентификатор класса
+     * @property {String} $classId - уникальный идентификатор класса
      * @property {XES.Class} $extends - базовый класс
      * @property {Function} $instance - декларация экземпляра класса
      */
