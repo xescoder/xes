@@ -141,7 +141,7 @@
             opt.res = objCreate(opt.base);
         }
 
-        if (!Constructor || !isFunction(Constructor.$instance)) {
+        if (!isFunction(Constructor.$instance)) {
             return opt;
         }
 
