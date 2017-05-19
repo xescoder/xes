@@ -78,7 +78,7 @@
         var res = '', i;
 
         for (i = 0; i < 5; i++) {
-            res += (((Math.random() + 1) * 5e9)^0).toString(36);
+            res += ((Math.random() * 9e7 + 1e7)^0).toString(36);
         }
 
         return res;
