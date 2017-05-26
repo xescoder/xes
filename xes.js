@@ -113,7 +113,7 @@
      */
     function findAbstractMethod(instance) {
         for (var key in instance) {
-            if (hasOwn.call(instance, key) && (instance[key] === $.Abstract)) {
+            if (hasOwn.call(instance, key) && isFunction(instance[key]) && (instance[key].$id === $.Abstract.$id)) {
                 return key;
             }
         }
@@ -288,6 +288,13 @@
     }
 
     /**
+     * @public
+     * @type {string}
+     * @memberOf XES
+     */
+    $.$fullName = 'XES';
+
+    /**
      * Список типов, реализованных в XES
      *
      * @public
@@ -300,20 +307,17 @@
     };
 
     /**
-     * Идентификатор абстракного метода
+     * Абстрактный метод
      *
      * @public
-     * @type {String}
+     * @type {Function}
      * @memberOf XES
      */
-    $.Abstract = randomString();
+    $.Abstract = function() {
+        throw new $.Error('This is abstract method', $.Abstract);
+    };
 
-    /**
-     * @public
-     * @type {string}
-     * @memberOf XES
-     */
-    $.$fullName = 'XES';
+    $.Abstract.$id = randomString();
 
     /**
      * Класс ошибок XES
