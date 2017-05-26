@@ -150,6 +150,7 @@
         }
 
         self = objCreate(opt.res);
+        self.public = opt.res;
 
         base = opt.base;
         opt.base = objCreate(opt.base);

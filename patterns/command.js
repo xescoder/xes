@@ -12,8 +12,8 @@ const XES = require('../xes');
  */
 XES.decl('Command', {
     instance: (self) => ({
-        execute: function() {
-            self.static._madeCommands.push(this);
+        execute: () => {
+            self.static._madeCommands.push(self.public);
         },
 
         undo: XES.Abstract
@@ -86,8 +86,8 @@ XES.decl('ToUpperCase', {
             self._text = text;
         },
 
-        execute: function() {
-            base.execute.apply(this, arguments);
+        execute: (...args) => {
+            base.execute(...args);
 
             self._prev = self._text.get();
 
@@ -114,8 +114,8 @@ XES.decl('RemoveSpaces', {
             self._text = text;
         },
 
-        execute: function() {
-            base.execute.apply(this, arguments);
+        execute: (...args) => {
+            base.execute(...args);
 
             self._prev = self._text.get();
 
@@ -146,7 +146,7 @@ XES.decl('MacroCommand', {
             self._commands.push(command);
         },
 
-        execute: function() {
+        execute: () => {
             self._commands.forEach((command) => {
                 command.execute();
             });

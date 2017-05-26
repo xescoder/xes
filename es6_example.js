@@ -87,7 +87,7 @@ do {
 console.log();
 console.log('Перебор только чётных с помощью forEach');
 
-list.forEach(function(val) {
+list.forEach((val) => {
     console.log(val);
 });
 

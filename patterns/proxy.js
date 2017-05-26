@@ -29,9 +29,9 @@ XES.decl('Config', {
         self._config = {};
 
         return {
-            set: function(key, value) {
+            set: (key, value) => {
                 self._config[key] = value;
-                return this;
+                return self.public;
             },
 
             get: (key) => self._config[key]
@@ -58,13 +58,13 @@ XES.decl('Proxy', {
                 self._config = config;
             },
 
-            set: function(key, value) {
+            set: (key, value) => {
                 if (self._allowedSetKeys.indexOf(key) === -1) {
-                    return this;
+                    return self.public;
                 }
 
                 self._config.set(key, value);
-                return this;
+                return self.public;
             },
 
             get: (key) => {

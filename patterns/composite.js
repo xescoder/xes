@@ -35,14 +35,14 @@ XES.decl('List', {
 
         get: (index) => self._items[index],
 
-        add: function(item) {
+        add: (item) => {
             self._items.push(item);
-            return this;
+            return self.public;
         },
 
-        remove: function(index) {
+        remove: (index) => {
             self._items.splice(index, 1);
-            return this;
+            return self.public;
         },
 
         length: () => self._items.length,

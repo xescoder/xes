@@ -28,14 +28,14 @@ XES.decl('Button', {
         self._text = '';
 
         return {
-            text: function(val) {
+            text: (val) => {
                 if (typeof val === 'undefined') {
                     return self._text;
                 }
 
                 self._text = val;
 
-                return this;
+                return self.public;
             }
         }
     }

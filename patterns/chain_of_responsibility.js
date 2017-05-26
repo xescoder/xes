@@ -42,12 +42,12 @@ XES.decl('Node', {
     extends: XES.ClickHandler,
 
     instance: (self, base) => ({
-        constructor: function(name, childs) {
+        constructor: (name, childs) => {
             self._name = name;
 
             if (childs) {
                 (Array.isArray(childs) ? childs : [childs]).forEach((child) => {
-                    child.setParent(this);
+                    child.setParent(self.public);
                 });
             }
         },
