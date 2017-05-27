@@ -155,8 +155,16 @@
         base = opt.base;
         opt.base = objCreate(opt.base);
 
+        if (Constructor.$stubBase) {
+            Constructor.$stubBase(base);
+        }
+
         self.static = privateStatic[Constructor.$classId];
         pub = Constructor.$instance(self, base);
+
+        if (Constructor.$stubInstance) {
+            Constructor.$stubInstance(pub, self, base);
+        }
 
         extend(opt.res, pub);
         extend(opt.base, pub);
@@ -341,6 +349,36 @@
     };
 
     $.Error.prototype = Error.prototype;
+
+    /**
+     * Создаёт заглушку для переданного класса
+     *
+     * @public
+     * @param {XES.Class} XES_Class
+     * @param {Object} body
+     * @memberOf XES
+     */
+    $.stub = function(XES_Class, body) {
+        if (isFunction(body.base)) {
+            XES_Class.$stubBase = body.base;
+        }
+
+        if (isFunction(body.instance)) {
+            XES_Class.$stubInstance = body.instance;
+        }
+    };
+
+    /**
+     * Сбрасывает заглушку для переданного класса
+     *
+     * @public
+     * @param {XES.Class} XES_Class
+     * @memberOf XES
+     */
+    $.resetStub = function(XES_Class) {
+        delete XES_Class.$stubBase;
+        delete XES_Class.$stubInstance;
+    };
 
     /**
      * @public
