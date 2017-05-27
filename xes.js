@@ -363,11 +363,11 @@
      */
     $.stub = function(XES_Class, body) {
         if (XES_Class.$type !== $.TYPES.CLASS) {
-            return;
+            throw new $.Error('First argument is not XES.Class', $.stub);
         }
 
         if (!isObject(body)) {
-            return;
+            throw new $.Error('Second argument is not object', $.stub);
         }
 
         if (isFunction(body.static)) {
@@ -402,7 +402,7 @@
      */
     $.resetStub = function(XES_Class) {
         if (XES_Class.$type !== $.TYPES.CLASS) {
-            return;
+            throw new $.Error('First argument is not XES.Class', $.resetStub);
         }
 
         if (originalStatic[XES_Class.$classId]) {
