@@ -91,26 +91,18 @@ console.log('Length: ', rArray.length());
 /* ------------------------------ Testing ---------------------------------- */
 
 // XES.RandomString stub
-((original) => {
-    XES.RandomString.$instance = function stub() {
-        const inst = original.apply(this, arguments);
-
-        inst.create = () => 'qwerty';
-
-        return inst;
-    };
-})(XES.RandomString.$instance);
+XES.stub(XES.RandomString, {
+    instance: (pub) => {
+        pub.create = () => 'qwerty';
+    }
+});
 
 // XES.RandomArray stub
-((original) => {
-    XES.RandomArray.$instance = function stub() {
-        const inst = original.apply(this, arguments);
-
-        inst.create = () => [0, 1, 2, 3, 4, 5, 6];
-
-        return inst;
-    };
-})(XES.RandomArray.$instance);
+XES.stub(XES.RandomArray, {
+    instance: (pub) => {
+        pub.create = () => [0, 1, 2, 3, 4, 5, 6];
+    }
+});
 
 rString = new XES.RandomString();
 rArray = new XES.RandomArray();

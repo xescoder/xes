@@ -1,7 +1,15 @@
 var XES = require('./xes');
 
+XES.decl('Base', {
+    instance: () => ({
+        get: () => 'base real'
+    })
+});
+
 XES.decl('Class', {
-    instance: (self) => ({
+    extends: XES.Base,
+
+    instance: (self, base) => ({
         constructor: (value) => {
             self._value = value;
         },
@@ -10,11 +18,11 @@ XES.decl('Class', {
             self._value = value;
         },
 
-        get: () => self._value
+        get: () => base.get() + ', ' + self._value
     }),
 
     static: (self) => {
-        self._staticValue = 0;
+        self._staticValue = 'real';
 
         return {
             set: (value) => {
@@ -27,29 +35,33 @@ XES.decl('Class', {
 });
 
 XES.stub(XES.Class, {
-    base: (base) => ({
-
-    }),
+    base: (base) => {
+        base.get = () => 'base stub';
+    },
 
     instance: (pub, self, base) => {
         pub.constructor = () => {
             self._value = 'stub';
         };
-
-        // pub.get = () => 'stub';
     },
 
-    static: (pub, self) => ({
+    static: (pub, self) => {
+        self._staticValue = 123;
 
-    })
+        pub.get = () => 'stub: ' + self._staticValue;
+    }
 });
 
-var inst1 = new XES.Class('real');
 
+const inst1 = new XES.Class('real');
+
+console.log(XES.Class.get());
 console.log(inst1.get());
+console.log();
 
 XES.resetStub(XES.Class);
 
-var inst2 = new XES.Class('real');
+const inst2 = new XES.Class('real');
 
+console.log(XES.Class.get());
 console.log(inst2.get());

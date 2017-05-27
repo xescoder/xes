@@ -10,6 +10,8 @@
      * @property {String} $fullName - полное название пространства имён
      * @property {Function} name - создаёт вложенное пространство имён (XES.Namespace)
      * @property {Function} decl - декларирует вложенный класс (XES.Class)
+     * @property {Function} stub - создаёт стаб класса
+     * @property {Function} resetStub - откатывает стаб класса
      */
 
     /**
@@ -43,6 +45,7 @@
             },
 
         privateStatic = {}, // хранилище приватных статических областей видимости
+        originalStatic = {}, // хранилище оригинальных статических областей видимости (для стабов)
         namespaceProto = {}, // прототип для пространств имён
         $ = objCreate(namespaceProto); // публичный интерфейс
 
@@ -92,7 +95,7 @@
      * @param {*} source
      */
     function extend(dest, source) {
-        if (!isObject(source)) {
+        if (!isObject(source) && !isFunction(source)) {
             return;
         }
 
@@ -359,6 +362,28 @@
      * @memberOf XES
      */
     $.stub = function(XES_Class, body) {
+        if (XES_Class.$type !== $.TYPES.CLASS) {
+            return;
+        }
+
+        if (!isObject(body)) {
+            return;
+        }
+
+        if (isFunction(body.static)) {
+            var self = privateStatic[XES_Class.$classId],
+                pub = XES_Class,
+                origSelf = {},
+                origPub = {};
+
+            extend(origSelf, self);
+            extend(origPub, pub);
+
+            originalStatic[XES_Class.$classId] = { self: origSelf, pub: origPub };
+
+            body.static(pub, self);
+        }
+
         if (isFunction(body.base)) {
             XES_Class.$stubBase = body.base;
         }
@@ -376,6 +401,19 @@
      * @memberOf XES
      */
     $.resetStub = function(XES_Class) {
+        if (XES_Class.$type !== $.TYPES.CLASS) {
+            return;
+        }
+
+        if (originalStatic[XES_Class.$classId]) {
+            var original = originalStatic[XES_Class.$classId];
+
+            extend(privateStatic[XES_Class.$classId], original.self);
+            extend(XES_Class, original.pub);
+
+            delete originalStatic[XES_Class.$classId];
+        }
+
         delete XES_Class.$stubBase;
         delete XES_Class.$stubInstance;
     };
